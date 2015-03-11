@@ -1,0 +1,46 @@
+﻿<Window x:Class="CredentialChanger.View.AddUserDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:credentialChanger="clr-namespace:CredentialChanger"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:credentialManagement="clr-namespace:CredentialManagement;assembly=CredentialManagement"
+        xmlns:viewModel="clr-namespace:CredentialChanger.ViewModel"
+        Title="Add new User" Height="244.8" Width="300">
+    <Window.Resources>
+        <viewModel:AddDialogModelView x:Key="MyAddDialogModelView" />
+        <ObjectDataProvider x:Key="CredentialTypeEnum" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="credentialManagement:CredentialType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Grid Name="AddUserGrid" DataContext="{StaticResource MyAddDialogModelView}">
+        <Button Content="Apply" Click="OnApplyClick" HorizontalAlignment="Right" Margin="0,179,-0.4,-0.2"
+                VerticalAlignment="Top" Width="294" Height="38" />
+        <ComboBox
+            HorizontalAlignment="Left"
+            Margin="10,25,0,0"
+            VerticalAlignment="Top" Width="274"
+            ItemsSource="{Binding Users}"
+            SelectedItem="{Binding User}"
+            DisplayMemberPath="Username" />
+        <TextBox Text="{Binding NewCredential}" HorizontalAlignment="Left" Height="23" Margin="81,66,0,0"
+                 TextWrapping="Wrap" VerticalAlignment="Top" Width="203" />
+        <Label Content="Username:" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top"
+               RenderTransformOrigin="0.474,-0.289" />
+        <TextBox IsEnabled="{Binding IsUserEnabled}" HorizontalAlignment="Left" Height="23" Margin="81,121,0,0"
+                 TextWrapping="Wrap" Text="{Binding Path=NewUser}" VerticalAlignment="Top" Width="203" />
+        <Label Content="Credential:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" Width="66" />
+        <PasswordBox Name="MyPasswordBox" HorizontalAlignment="Left" Margin="81,149,0,0" VerticalAlignment="Top"
+                     Width="203" Height="23" />
+        <Label Content="Password" HorizontalAlignment="Left" Margin="10,151,0,0" VerticalAlignment="Top" Width="66"
+               Height="23" />
+        <ComboBox
+            HorizontalAlignment="Left" Margin="81,94,0,0"
+            VerticalAlignment="Top" Width="203"
+            ItemsSource="{Binding Source={StaticResource CredentialTypeEnum}}"
+            SelectedItem="{Binding Type}" />
+        <Label Content="Type" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" Width="66" />
+    </Grid>
+</Window>

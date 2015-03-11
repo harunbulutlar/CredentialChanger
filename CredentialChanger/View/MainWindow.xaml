@@ -1,0 +1,73 @@
+﻿<Window x:Class="CredentialChanger.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:CredentialChanger.ViewModel" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Credential Hero" Height="430" Width="768.1"
+        Icon="../Resources/baymax_funny_teaser.ico" ResizeMode="NoResize">
+    <Window.Resources>
+        <c:CredentialModelView x:Key="MyCredentialModelView" />
+    </Window.Resources>
+    <Grid DataContext="{StaticResource MyCredentialModelView}">
+        <ComboBox HorizontalAlignment="Left"
+                  Margin="10,67,0,0"
+                  VerticalAlignment="Top"
+                  Width="216"
+                  ItemsSource="{Binding Users, Mode=TwoWay}"
+                  SelectedItem="{Binding User}"
+                  DisplayMemberPath="Username" />
+        <Label Content="Users:" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Width="123" />
+        <PasswordBox Name="MyPasswordBox" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top"
+                     Width="216" />
+        <Label Content="Password:" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" Width="69" />
+        <Button Content="ChangeIt!" HorizontalAlignment="Left" Margin="10,149,0,0" VerticalAlignment="Top" Width="75"
+                Command="{Binding SaveCommand}"
+                CommandParameter="{Binding ElementName=MyPasswordBox}" RenderTransformOrigin="0.405,1.625" />
+        <Label Content="Credentials:" HorizontalAlignment="Left" Margin="231,36,0,0" VerticalAlignment="Top"
+               RenderTransformOrigin="-0.138,-1.266" />
+        <DataGrid Name="CredentialsGrid" SelectionMode="Extended" CanUserAddRows="False"
+                  ItemsSource="{Binding User.Credentials}" AutoGenerateColumns="False" HorizontalAlignment="Left"
+                  Margin="231,67,0,0" VerticalAlignment="Top" Height="245" Width="524">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Add" Click="Context_Add" />
+                    <MenuItem Header="Delete" Click="Context_Delete" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding User.IsAllChecked}"
+                                      DataContext="{StaticResource MyCredentialModelView}"
+                                      Command="{Binding User.AllCheckCommand}"
+                                      CommandParameter="{Binding Path=IsChecked, RelativeSource={RelativeSource Self}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding Type}" Header="Type" />
+                <DataGridHyperlinkColumn Binding="{Binding Credential}" Header="Path">
+                    <DataGridHyperlinkColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <EventSetter Event="Hyperlink.Click" Handler="OnHyperlinkClick" />
+                        </Style>
+                    </DataGridHyperlinkColumn.ElementStyle>
+                </DataGridHyperlinkColumn>
+                <DataGridTextColumn Binding="{Binding LastChangeTime}" Header="Last Modified Time" />
+                <DataGridTextColumn Width="*" Binding="{Binding Description}" Header="Description" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Command="{Binding RefreshCommand}" Content="Refresh" HorizontalAlignment="Left" Margin="151,149,0,0"
+                VerticalAlignment="Top" Width="75" />
+        <Image Source="../Resources/baymax2.jpg" HorizontalAlignment="Left" Height="180" Margin="10,212,0,0"
+               VerticalAlignment="Top" Width="145" />
+        <Label Content="Change Your Credentials" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"
+               Width="307" FontSize="16" />
+    </Grid>
+</Window>
